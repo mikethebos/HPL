@@ -8,7 +8,7 @@
 #SBATCH --output debug_2nodes.out
 #SBATCH --error debug_2nodes.err
 
-module load gcc/11.2.0-otgt hpl
+module load hpl
 
 export OMP_PROC_BIND=TRUE
 export OMP_PLACES=cores
