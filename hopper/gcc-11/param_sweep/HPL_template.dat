@@ -3,7 +3,7 @@ Innovative Computing Laboratory, University of Tennessee
 HPL.out      output file name (if any)
 1            device out (6=stdout,7=stderr,file)
 1            # of problems sizes (N)
-57600	     Ns # Appropriate for 16GB RAM
+14616	     Ns # Appropriate for 16GB RAM
 1            # of NBs
 <BLOCK_SIZE>	     NBs
 0            PMAP process mapping (0=Row-,1=Column-major)
