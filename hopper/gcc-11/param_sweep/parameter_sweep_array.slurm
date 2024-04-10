@@ -62,8 +62,7 @@ cd $TMP_WORKING_DIR
 echo Now running in $PWD
 
 # Fill out template file
-echo <<EOF
-HPLinpack benchmark input file
+echo "HPLinpack benchmark input file
 Innovative Computing Laboratory, University of Tennessee
 HPL.out      output file name (if any)
 1            device out (6=stdout,7=stderr,file)
@@ -93,8 +92,7 @@ $SWAP_THRESH           swapping threshold
 $L1_T            L1 in (0=transposed,1=no-transposed) form
 $U_T            U  in (0=transposed,1=no-transposed) form
 $EQUIL            Equilibration (0=no,1=yes)
-$MEM_ALIGN            memory alignment in double (> 0)
-EOF >> HPL.dat
+$MEM_ALIGN            memory alignment in double (> 0)" > HPL.dat
 
 export OMP_NUM_THREADS=$OMP_THREADS
 
