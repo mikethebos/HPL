@@ -64,35 +64,35 @@ echo Now running in $PWD
 # Fill out template file
 echo "HPLinpack benchmark input file
 Innovative Computing Laboratory, University of Tennessee
-HPL.out      output file name (if any)
-1            device out (6=stdout,7=stderr,file)
-$NUM_N            # of problems sizes (N)
-$N	     Ns # Appropriate for 16GB RAM
-$NUM_BLOCKS            # of NBs
-$BLOCK_SIZE	     NBs
-$PROC_MAP            PMAP process mapping (0=Row-,1=Column-major)
+HPL.out             # output file name (if any)
+1                   # device out (6=stdout,7=stderr,file)
+$NUM_N              # of problems sizes (N)
+$N	                # Ns Appropriate for 16GB RAM
+$NUM_BLOCKS         # of NBs
+$BLOCK_SIZE	        # NBs
+$PROC_MAP           # PMAP process mapping (0=Row-,1=Column-major)
 $NUM_PxQ            # of process grids (P x Q)
-$P            Ps
-$Q            Qs
-$THRESH         threshold
-$NUM_PFACT            # of panel fact
-$PFACT            PFACTs (0=left, 1=Crout, 2=Right)
-$NUM_REC_STOP_CRIT            # of recursive stopping criterium
-$NBMIN            NBMINs (>= 1)
-$NUM_REC_PANELS            # of panels in recursion
-$NDIV            NDIVs
-$NUM_RPFACT            # of recursive panel fact.
-$RPFACT            RFACTs (0=left, 1=Crout, 2=Right)
-$NUM_BCAST            # of broadcast
-$BCAST            BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)
-$NUM_DEPTH            # of lookahead depth
-$DEPTH            DEPTHs (>=0)
-$SWAP            SWAP (0=bin-exch,1=long,2=mix)
-$SWAP_THRESH           swapping threshold
-$L1_T            L1 in (0=transposed,1=no-transposed) form
-$U_T            U  in (0=transposed,1=no-transposed) form
-$EQUIL            Equilibration (0=no,1=yes)
-$MEM_ALIGN            memory alignment in double (> 0)" > HPL.dat
+$P                  # Ps
+$Q                  # Qs
+$THRESH             # threshold
+$NUM_PFACT          # of panel fact
+$PFACT              # PFACTs (0=left, 1=Crout, 2=Right)
+$NUM_REC_STOP_CRIT  # of recursive stopping criterium
+$NBMIN              # NBMINs (>= 1)
+$NUM_REC_PANELS     # of panels in recursion
+$NDIV               # NDIVs
+$NUM_RPFACT         # of recursive panel fact.
+$RPFACT             # RFACTs (0=left, 1=Crout, 2=Right)
+$NUM_BCAST          # of broadcast
+$BCAST              # BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)
+$NUM_DEPTH          # of lookahead depth
+$DEPTH              # DEPTHs (>=0)
+$SWAP               # SWAP (0=bin-exch,1=long,2=mix)
+$SWAP_THRESH        # swapping threshold
+$L1_T               # L1 in (0=transposed,1=no-transposed) form
+$U_T                # U in (0=transposed,1=no-transposed) form
+$EQUIL              # Equilibration (0=no,1=yes)
+$MEM_ALIGN          # memory alignment in double (> 0)" > HPL.dat
 
 export OMP_NUM_THREADS=$OMP_THREADS
 
