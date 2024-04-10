@@ -14,7 +14,6 @@ module load gcc/11.2.0-655h hpl
 
 export OMP_PROC_BIND=TRUE
 export OMP_PLACES=cores
-export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 # Set a place to record the results
 RESULTS_FILE=$SLURM_SUBMIT_DIR/HPL_results.csv
@@ -41,87 +40,10 @@ fi
 PARAMS=$(head -n $SLURM_ARRAY_TASK_ID $PARAMS_FILE | tail -n 1)
 echo Read param line $SLURM_ARRAY_TASK_ID: $PARAMS
 
-# Get the Xth element of that line (comma separated)
-NUM_N=$(echo $PARAMS | awk -F"," '{print $1}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_N: $NUM_N
-
-N=$(echo $PARAMS | awk -F"," '{print $2}') # awk: Aho, Weinberger, and Kernighan
-echo Read param N: $N
-
-NUM_BLOCKS=$(echo $PARAMS | awk -F"," '{print $3}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_BLOCKS: $NUM_BLOCKS
-
-BLOCK_SIZE=$(echo $PARAMS | awk -F"," '{print $4}') # awk: Aho, Weinberger, and Kernighan
-echo Read param BLOCK_SIZE: $BLOCK_SIZE
-
-PROC_MAP=$(echo $PARAMS | awk -F"," '{print $5}') # awk: Aho, Weinberger, and Kernighan
-echo Read param PROC_MAP: $PROC_MAP
-
-NUM_PxQ=$(echo $PARAMS | awk -F"," '{print $6}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_PxQ: $NUM_PxQ
-
-P=$(echo $PARAMS | awk -F"," '{print $7}') # awk: Aho, Weinberger, and Kernighan
-echo Read param P: $P
-
-Q=$(echo $PARAMS | awk -F"," '{print $8}') # awk: Aho, Weinberger, and Kernighan
-echo Read param Q: $Q
-
-THRESH=$(echo $PARAMS | awk -F"," '{print $9}') # awk: Aho, Weinberger, and Kernighan
-echo Read param THRESH: $THRESH
-
-NUM_PFACT=$(echo $PARAMS | awk -F"," '{print $10}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_PFACT: $NUM_PFACT
-
-PFACT=$(echo $PARAMS | awk -F"," '{print $11}') # awk: Aho, Weinberger, and Kernighan
-echo Read param PFACT: $PFACT
-
-NUM_REC_STOP_CRIT=$(echo $PARAMS | awk -F"," '{print $12}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_REC_STOP_CRIT: $NUM_REC_STOP_CRIT
-
-NBMIN=$(echo $PARAMS | awk -F"," '{print $13}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NBMIN: $NBMIN
-
-NUM_REC_PANELS=$(echo $PARAMS | awk -F"," '{print $14}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_REC_PANELS: $NUM_REC_PANELS
-
-NDIV=$(echo $PARAMS | awk -F"," '{print $15}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NDIV: $NDIV
-
-NUM_RPFACT=$(echo $PARAMS | awk -F"," '{print $16}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_RPFACT: $NUM_RPFACT
-
-RPFACT=$(echo $PARAMS | awk -F"," '{print $17}') # awk: Aho, Weinberger, and Kernighan
-echo Read param RPFACT: $RPFACT
-
-NUM_BCAST=$(echo $PARAMS | awk -F"," '{print $18}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_BCAST: $NUM_BCAST
-
-BCAST=$(echo $PARAMS | awk -F"," '{print $19}') # awk: Aho, Weinberger, and Kernighan
-echo Read param BCAST: $BCAST
-
-NUM_DEPTH=$(echo $PARAMS | awk -F"," '{print $20}') # awk: Aho, Weinberger, and Kernighan
-echo Read param NUM_DEPTH: $NUM_DEPTH
-
-DEPTH=$(echo $PARAMS | awk -F"," '{print $21}') # awk: Aho, Weinberger, and Kernighan
-echo Read param DEPTH: $DEPTH
-
-SWAP=$(echo $PARAMS | awk -F"," '{print $22}') # awk: Aho, Weinberger, and Kernighan
-echo Read param SWAP: $SWAP
-
-SWAP_THRESH=$(echo $PARAMS | awk -F"," '{print $23}') # awk: Aho, Weinberger, and Kernighan
-echo Read param SWAP_THRESH: $SWAP_THRESH
-
-L1_T=$(echo $PARAMS | awk -F"," '{print $24}') # awk: Aho, Weinberger, and Kernighan
-echo Read param L1_T: $L1_T
-
-U_T=$(echo $PARAMS | awk -F"," '{print $25}') # awk: Aho, Weinberger, and Kernighan
-echo Read param U_T: $U_T
-
-EQUIL=$(echo $PARAMS | awk -F"," '{print $26}') # awk: Aho, Weinberger, and Kernighan
-echo Read param EQUIL: $EQUIL
-
-MEM_ALIGN=$(echo $PARAMS | awk -F"," '{print $27}') # awk: Aho, Weinberger, and Kernighan
-echo Read param MEM_ALIGN: $MEM_ALIGN
+read -r NUM_N N NUM_BLOCKS BLOCK_SIZE PROC_MAP NUM_PxQ P Q THRESH NUM_PFACT \
+    PFACT NUM_REC_STOP_CRIT NBMIN NUM_REC_PANELS NDIV NUM_RPFACT RPFACT \
+    NUM_BCAST BCAST NUM_DEPTH DEPTH SWAP SWAP_THRESH L1_T U_T EQUIL MEM_ALIGN \
+    SLURM_NODES SLURM_NTASKS_PER_NODE OMP_THREADS <<<$(echo $PARAMS | tr)
 
 # Create a new working directory for each instance of xhpl since it needs it expects it's own HPL.dat
 SCRATCH_DIR=/carc/scratch/users/$USER
@@ -171,8 +93,10 @@ sed -i "s/<U_T>/$U_T/g" HPL.dat # sed: string edit
 sed -i "s/<EQUIL>/$EQUIL/g" HPL.dat # sed: string edit
 sed -i "s/<MEM_ALIGN>/$MEM_ALIGN/g" HPL.dat # sed: string edit
 
+export OMP_NUM_THREADS=$OMP_THREADS
+
 echo Running xhpl in $TMP_WORKING_DIR...
-srun --mpi=pmi2 xhpl
+echo srun --nodes $SLURM_NODES --ntasks-per-node $SLURM_NTASKS_PER_NODE --mpi=pmi2 xhpl
 echo xhpl finished
 
 # The HPL.dat file tells xhpl to write to HPL.out.
@@ -191,7 +115,7 @@ GFLOPS=$(echo $RESULT_DATA_LINE | awk -F" " '{print $NF}')
 echo Results Gflops: $GFLOPS 
 
 echo Writing input parameters and gflops to $RESULTS_FILE
-echo $SLURM_JOB_NUM_NODES, $SLURM_NTASKS_PER_NODE, $OMP_NUM_THREADS, $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $GFLOPS >> $RESULTS_FILE
+echo $SLURM_NODES, $SLURM_NTASKS_PER_NODE, $OMP_NUM_THREADS, $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $GFLOPS >> $RESULTS_FILE
 
 # Clean up the temporary working directory
 rm -r $TMP_DIR
