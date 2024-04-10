@@ -5,6 +5,7 @@
 #SBATCH --time 00:10:00
 #SBATCH --nodes 2
 #SBATCH --ntasks-per-node 8
+#SBATCH --cpus-per-task 4
 #SBATCH --mem 16GB
 #SBATCH --array 1-2
 
@@ -13,7 +14,7 @@ module load gcc/11.2.0-655h hpl
 
 export OMP_PROC_BIND=TRUE
 export OMP_PLACES=cores
-export OMP_NUM_THREADS=4
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 # Set a place to record the results
 RESULTS_FILE=$SLURM_SUBMIT_DIR/HPL_results.csv
@@ -190,7 +191,7 @@ GFLOPS=$(echo $RESULT_DATA_LINE | awk -F" " '{print $NF}')
 echo Results Gflops: $GFLOPS 
 
 echo Writing input parameters and gflops to $RESULTS_FILE
-echo $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $GFLOPS >> $RESULTS_FILE
+echo $SLURM_JOB_NUM_NODES, $SLURM_NTASKS_PER_NODE, $OMP_NUM_THREADS, $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $GFLOPS >> $RESULTS_FILE
 
 # Clean up the temporary working directory
 rm -r $TMP_DIR
