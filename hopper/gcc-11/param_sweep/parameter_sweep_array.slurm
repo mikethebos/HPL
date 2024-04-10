@@ -37,13 +37,13 @@ else
 fi
     
 # Get the Nth line from our parameter file - where N is the array ID
-PARAMS=$(head -n $SLURM_ARRAY_TASK_ID $PARAMS_FILE | tail -n 1)
+PARAMS=$(head -n $SLURM_ARRAY_TASK_ID $PARAMS_FILE | tail -n 1 | tr ',' ' ')
 echo Read param line $SLURM_ARRAY_TASK_ID: $PARAMS
 
 read -r NUM_N N NUM_BLOCKS BLOCK_SIZE PROC_MAP NUM_PxQ P Q THRESH NUM_PFACT \
     PFACT NUM_REC_STOP_CRIT NBMIN NUM_REC_PANELS NDIV NUM_RPFACT RPFACT \
     NUM_BCAST BCAST NUM_DEPTH DEPTH SWAP SWAP_THRESH L1_T U_T EQUIL MEM_ALIGN \
-    SLURM_NODES SLURM_NTASKS_PER_NODE OMP_THREADS <<<$(echo $PARAMS | tr)
+    SLURM_NODES SLURM_NTASKS_PER_NODE OMP_THREADS <<<$(echo $PARAMS)
 
 # Create a new working directory for each instance of xhpl since it needs it expects it's own HPL.dat
 SCRATCH_DIR=/carc/scratch/users/$USER
