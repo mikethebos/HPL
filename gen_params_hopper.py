@@ -56,6 +56,10 @@ def slurm(input_path):
         dir = "/."
     
     for args in product(SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
+        # hopper
+        if args[1] * args[2] > 32:
+            continue
+                
         SWEEP = ""
         for ind, params in enumerate(all_combinations):
             p = params[6]

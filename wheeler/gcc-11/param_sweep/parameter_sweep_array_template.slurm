@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name HPL_ParamSweep
-#SBATCH --partition general
+#SBATCH --partition normal
 #SBATCH --time 00:10:00
 #SBATCH --nodes <PARAM_NNODES>
 #SBATCH --ntasks-per-node <PARAM_NTASKSPERNODE>
@@ -10,7 +10,7 @@
 #SBATCH --array <SWEEP>
 
 # Load the required packages (gcc 11 and HPL)
-module load gcc/11.2.0-655h hpl
+module load gcc/11.2.0-otgt hpl
 
 export OMP_PROC_BIND=TRUE
 export OMP_PLACES=cores
