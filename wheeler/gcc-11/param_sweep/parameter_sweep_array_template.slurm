@@ -6,7 +6,7 @@
 #SBATCH --nodes <PARAM_NNODES>
 #SBATCH --ntasks-per-node <PARAM_NTASKSPERNODE>
 #SBATCH --cpus-per-task <PARAM_CPUSPERTASK>
-#SBATCH --mem 47GB
+#SBATCH --mem 45GB
 #SBATCH --array <SWEEP>
 
 # Load the required packages (gcc 11 and HPL)
