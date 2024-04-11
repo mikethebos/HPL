@@ -35,12 +35,14 @@ SLURM_NNODES = (1, 4, 16)
 SLURM_NTASKS_PER_NODE = (1, 2, 4)
 OMP_THREADS = (1, 2, 4)
 
-def csv():
-    for args in product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, P, Q,
+all_combinations = product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, P, Q,
                         THRESH, NUM_PFACT, PFACT, NUM_REC_STOP_CRIT, NBMIN,
                         NUM_REC_PANELS, NDIV, NUM_RPFACT, RPFACT, NUM_BCAST, BCAST,
                         NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
-                        MEM_ALIGN):
+                        MEM_ALIGN)
+
+def csv():
+    for args in all_combinations:
         print(','.join(str(x) for x in args))
         
 def slurm(input_path):
@@ -52,7 +54,8 @@ def slurm(input_path):
     for args in product(SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
         new_input = input.replace("<PARAM_NNODES>", str(args[0])) \
                               .replace("<PARAM_NTASKSPERNODE>", str(args[1])) \
-                              .replace("<PARAM_CPUSPERTASK>", str(args[2]))
+                              .replace("<PARAM_CPUSPERTASK>", str(args[2])) \
+                              .replace("<SWEEP_SIZE>", str(len(list(all_combinations))))
         
         save_path = dir + "/parameter_sweep_array_nnodes" + str(args[0]) \
                                                    + "_ntaskspernode" + str(args[1]) \
