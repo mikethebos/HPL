@@ -50,7 +50,11 @@ def slurm(input_path):
         input = f.read()
         
     dir = os.path.dirname(os.path.normpath(input_path))
-        
+    if dir == "":
+        dir = "."
+    elif dir == "/":
+        dir = "/."
+    
     for args in product(SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
         SWEEP = ""
         for ind, params in enumerate(all_combinations):
