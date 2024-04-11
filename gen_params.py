@@ -10,8 +10,8 @@ NUM_BLOCKS = (1,) # of NBs
 BLOCK_SIZE = (128, 232, 512, 768) # NBs
 PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
 NUM_PxQ = (1,) # of process grids (P x Q)
-P = (2, 4, 8) # Ps
-Q = (4, 8, 16) # Qs
+P = (1, 2, 4) # Ps
+Q = (1, 2, 4, 8) # Qs
 THRESH = (16.0,) # threshold
 NUM_PFACT = (1,) # of panel fact
 PFACT = (2,) # PFACTs (0=left, 1=Crout, 2=Right)
@@ -41,8 +41,6 @@ all_combinations = list(product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_
                         NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
                         MEM_ALIGN))
 
-num_all_combinations = len(all_combinations)
-
 def csv():
     for args in all_combinations:
         print(','.join(str(x) for x in args))
@@ -54,10 +52,23 @@ def slurm(input_path):
     dir = os.path.dirname(os.path.normpath(input_path))
         
     for args in product(SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
+        SWEEP = ""
+        for ind, params in enumerate(all_combinations):
+            p = params[6]
+            q = params[7]
+            if p * q == args[0] * args[1]:
+                SWEEP += str(ind + 1) + ","
+                
+        if len(SWEEP) > 0 and SWEEP[-1] == ",":
+            SWEEP = SWEEP[:-1]
+            
+        if len(SWEEP) == 0:
+            continue
+        
         new_input = input.replace("<PARAM_NNODES>", str(args[0])) \
                               .replace("<PARAM_NTASKSPERNODE>", str(args[1])) \
                               .replace("<PARAM_CPUSPERTASK>", str(args[2])) \
-                              .replace("<SWEEP_SIZE>", str(num_all_combinations))
+                              .replace("<SWEEP>", SWEEP)
 
         save_path = dir + "/parameter_sweep_array_nnodes" + str(args[0]) \
                                                    + "_ntaskspernode" + str(args[1]) \
