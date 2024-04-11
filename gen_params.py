@@ -5,13 +5,13 @@ import sys
 from itertools import product
 
 NUM_N = (1,) # of problems sizes (N)
-N = (3000, 6000, 14616,) # Ns # Appropriate for 16GB RAM
+N = (3000, 6000, 11000, 14616) # Ns # Appropriate for 16GB RAM
 NUM_BLOCKS = (1,) # of NBs
-BLOCK_SIZE = (232,) # NBs
+BLOCK_SIZE = (128, 232, 512, 768) # NBs
 PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
 NUM_PxQ = (1,) # of process grids (P x Q)
-P = (2,) # Ps
-Q = (4,) # Qs
+P = (2, 4, 8) # Ps
+Q = (4, 8, 16) # Qs
 THRESH = (16.0,) # threshold
 NUM_PFACT = (1,) # of panel fact
 PFACT = (2,) # PFACTs (0=left, 1=Crout, 2=Right)
@@ -31,8 +31,8 @@ L1_T = (0,) # L1 in (0=transposed,1=no-transposed) form
 U_T = (0,) # U in (0=transposed,1=no-transposed) form
 EQUIL = (1,) # Equilibration (0=no,1=yes)
 MEM_ALIGN = (8,) # memory alignment in double ( 0)
-SLURM_NNODES = (1, 4, 16)
-SLURM_NTASKS_PER_NODE = (1, 2, 4)
+SLURM_NNODES = (1, 2, 4)
+SLURM_NTASKS_PER_NODE = (1, 2, 4, 8)
 OMP_THREADS = (1, 2, 4)
 
 all_combinations = product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, P, Q,
@@ -40,6 +40,8 @@ all_combinations = product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, 
                         NUM_REC_PANELS, NDIV, NUM_RPFACT, RPFACT, NUM_BCAST, BCAST,
                         NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
                         MEM_ALIGN)
+
+num_all_combinations = len(list(all_combinations))
 
 def csv():
     for args in all_combinations:
@@ -55,8 +57,8 @@ def slurm(input_path):
         new_input = input.replace("<PARAM_NNODES>", str(args[0])) \
                               .replace("<PARAM_NTASKSPERNODE>", str(args[1])) \
                               .replace("<PARAM_CPUSPERTASK>", str(args[2])) \
-                              .replace("<SWEEP_SIZE>", str(len(list(all_combinations))))
-        
+                              .replace("<SWEEP_SIZE>", str(num_all_combinations))
+
         save_path = dir + "/parameter_sweep_array_nnodes" + str(args[0]) \
                                                    + "_ntaskspernode" + str(args[1]) \
                                                    + "_cpuspertask" + str(args[2]) \
