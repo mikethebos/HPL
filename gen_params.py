@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+import sys
 from itertools import product
 
 NUM_N = (1,) # of problems sizes (N)
@@ -29,13 +31,43 @@ L1_T = (0,) # L1 in (0=transposed,1=no-transposed) form
 U_T = (0,) # U in (0=transposed,1=no-transposed) form
 EQUIL = (1,) # Equilibration (0=no,1=yes)
 MEM_ALIGN = (8,) # memory alignment in double ( 0)
-SLURM_NODES = (1, 4, 16)
+SLURM_NNODES = (1, 4, 16)
 SLURM_NTASKS_PER_NODE = (1, 2, 4)
 OMP_THREADS = (1, 2, 4)
 
-for args in product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, P, Q,
-                    THRESH, NUM_PFACT, PFACT, NUM_REC_STOP_CRIT, NBMIN,
-                    NUM_REC_PANELS, NDIV, NUM_RPFACT, RPFACT, NUM_BCAST, BCAST,
-                    NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
-                    MEM_ALIGN, SLURM_NODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
-    print(','.join(str(x) for x in args))
+def csv():
+    for args in product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, P, Q,
+                        THRESH, NUM_PFACT, PFACT, NUM_REC_STOP_CRIT, NBMIN,
+                        NUM_REC_PANELS, NDIV, NUM_RPFACT, RPFACT, NUM_BCAST, BCAST,
+                        NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
+                        MEM_ALIGN, SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
+        print(','.join(str(x) for x in args))
+        
+def slurm(input_path):
+    with open(input_path, 'r') as f:
+        input = f.read()
+        
+    dir = os.path.dirname(os.path.normpath(input_path))
+        
+    for args in product(SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
+        new_input = input.replace("<PARAM_NNODES>", str(args[0])) \
+                              .replace("<PARAM_NTASKSPERNODE>", str(args[1])) \
+                              .replace("<PARAM_CPUSPERTASK>", str(args[2]))
+        
+        save_path = dir + "/parameter_sweep_array_nnodes" + str(args[0]) \
+                                                   + "_ntaskspernode" + str(args[1]) \
+                                                   + "_cpuspertask" + str(args[2]) \
+                                                   + ".slurm"
+        
+        with open(save_path, 'w') as f:
+            f.write(new_input)
+        
+if __name__ == "__main__":
+    if sys.argv[1] == "csv":
+        csv()
+    elif sys.argv[1] == "slurm":
+        slurm(sys.argv[2])
+    else:
+        print("csv will print HPL_params.csv to stdout")
+        print("slurm <path to parameter_sweep_array_template.slurm> will create slurm scripts for " + 
+              "nodes, ntasks per node, omp threads sweep in same dir")

@@ -3,9 +3,9 @@
 #SBATCH --job-name HPL_ParamSweep
 #SBATCH --partition general
 #SBATCH --time 00:10:00
-#SBATCH --nodes 2
-#SBATCH --ntasks-per-node 8
-#SBATCH --cpus-per-task 4
+#SBATCH --nodes <PARAM_NNODES>
+#SBATCH --ntasks-per-node <PARAM_NTASKSPERNODE>
+#SBATCH --cpus-per-task <PARAM_CPUSPERTASK>
 #SBATCH --mem 16GB
 #SBATCH --array 1-2
 
@@ -43,7 +43,7 @@ echo Read param line $SLURM_ARRAY_TASK_ID: $PARAMS
 read -r NUM_N N NUM_BLOCKS BLOCK_SIZE PROC_MAP NUM_PxQ P Q THRESH NUM_PFACT \
     PFACT NUM_REC_STOP_CRIT NBMIN NUM_REC_PANELS NDIV NUM_RPFACT RPFACT \
     NUM_BCAST BCAST NUM_DEPTH DEPTH SWAP SWAP_THRESH L1_T U_T EQUIL MEM_ALIGN \
-    SLURM_NODES SLURM_NTASKS_PER_NODE OMP_THREADS <<<$(echo $PARAMS)
+    SLURM_NNODES SLURM_NTASKS_PER_NODE OMP_THREADS <<<$(echo $PARAMS)
 
 # Create a new working directory for each instance of xhpl since it needs it expects it's own HPL.dat
 SCRATCH_DIR=/carc/scratch/users/$USER
@@ -94,10 +94,10 @@ $U_T                # U in (0=transposed,1=no-transposed) form
 $EQUIL              # Equilibration (0=no,1=yes)
 $MEM_ALIGN          # memory alignment in double (> 0)" > HPL.dat
 
-export OMP_NUM_THREADS=$OMP_THREADS
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 echo Running xhpl in $TMP_WORKING_DIR...
-echo srun --nodes $SLURM_NODES --ntasks-per-node $SLURM_NTASKS_PER_NODE --mpi=pmi2 xhpl
+srun --nodes $SLURM_NNODES --ntasks-per-node $SLURM_NTASKS_PER_NODE --cpus-per-task $OMP_NUM_THREADS --mpi=pmi2 xhpl
 echo xhpl finished
 
 # The HPL.dat file tells xhpl to write to HPL.out.
@@ -116,7 +116,7 @@ GFLOPS=$(echo $RESULT_DATA_LINE | awk -F" " '{print $NF}')
 echo Results Gflops: $GFLOPS 
 
 echo Writing input parameters and gflops to $RESULTS_FILE
-echo $SLURM_NODES, $SLURM_NTASKS_PER_NODE, $OMP_NUM_THREADS, $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $GFLOPS >> $RESULTS_FILE
+echo $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $SLURM_NNODES, $SLURM_NTASKS_PER_NODE, $OMP_NUM_THREADS, $GFLOPS >> $RESULTS_FILE
 
 # Clean up the temporary working directory
 rm -r $TMP_DIR
