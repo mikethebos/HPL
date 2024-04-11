@@ -40,7 +40,7 @@ def csv():
                         THRESH, NUM_PFACT, PFACT, NUM_REC_STOP_CRIT, NBMIN,
                         NUM_REC_PANELS, NDIV, NUM_RPFACT, RPFACT, NUM_BCAST, BCAST,
                         NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
-                        MEM_ALIGN, SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS):
+                        MEM_ALIGN):
         print(','.join(str(x) for x in args))
         
 def slurm(input_path):
