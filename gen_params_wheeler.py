@@ -5,9 +5,9 @@ import sys
 from itertools import product
 
 NUM_N = (1,) # of problems sizes (N)
-N = (3000, 6000, 11000, 14616) # Ns # Appropriate for 16GB RAM
+N = (29232, 43848, 58464, 73080, 467712, 935424) # Ns # Appropriate for 16GB RAM
 NUM_BLOCKS = (1,) # of NBs
-BLOCK_SIZE = (32, 48, 64, 96) # NBs
+BLOCK_SIZE = (32, 48, 64, 96, 128, 232, 512, 768) # NBs
 PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
 NUM_PxQ = (1,) # of process grids (P x Q)
 P = (1, 4, 8) # Ps
@@ -159,6 +159,52 @@ if __name__ == "__main__":
 # N = (3000, 6000, 11000, 14616) # Ns # Appropriate for 16GB RAM
 # NUM_BLOCKS = (1,) # of NBs
 # BLOCK_SIZE = (32, 48, 64, 96) # NBs
+# PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
+# NUM_PxQ = (1,) # of process grids (P x Q)
+# P = (1, 4, 8) # Ps
+# Q = (1, 4, 8, 16, 32, 48) # Qs
+# THRESH = (16.0,) # threshold
+# NUM_PFACT = (1,) # of panel fact
+# PFACT = (2,) # PFACTs (0=left, 1=Crout, 2=Right)
+# NUM_REC_STOP_CRIT = (1,) # of recursive stopping criterium
+# NBMIN = (4,) # NBMINs (= 1)
+# NUM_REC_PANELS = (1,) # of panels in recursion
+# NDIV = (2,) # NDIVs
+# NUM_RPFACT = (1,) # of recursive panel fact.
+# RPFACT = (2,) # RFACTs (0=left, 1=Crout, 2=Right)
+# NUM_BCAST = (1,) # of broadcast
+# BCAST = (2,) # BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)
+# NUM_DEPTH = (1,) # of lookahead depth
+# DEPTH = (1,) # DEPTHs (=0)
+# SWAP = (1,) # SWAP (0=bin-exch,1=long,2=mix)
+# SWAP_THRESH = (64,) # swapping threshold
+# L1_T = (0,) # L1 in (0=transposed,1=no-transposed) form
+# U_T = (0,) # U in (0=transposed,1=no-transposed) form
+# EQUIL = (1,) # Equilibration (0=no,1=yes)
+# MEM_ALIGN = (8,) # memory alignment in double ( 0)
+# SLURM_NNODES = (1, 4, 8, 16, 32, 48)
+# SLURM_NTASKS_PER_NODE = (1, 4, 8)
+# OMP_THREADS = (1, 2, 4, 8)
+
+# Sweep 3: Ran:
+# (48 nodes, 1 tasks per node, 8 cpus per task)
+# (48 nodes, 1 tasks per node, 4 cpus per task)
+# (48 nodes, 8 tasks per node, 1 cpus per task)
+# (32 nodes, 1 tasks per node, 4 cpus per task)
+# (32 nodes, 8 tasks per node, 1 cpus per task)
+# (16 nodes, 1 tasks per node, 4 cpus per task)
+# (16 nodes, 8 tasks per node, 1 cpus per task)
+# (8 nodes, 1 tasks per node, 4 cpus per task)
+# (8 nodes, 8 tasks per node, 1 cpus per task)
+# (4 nodes, 1 tasks per node, 4 cpus per task)
+# (4 nodes, 8 tasks per node, 1 cpus per task)
+# (1 nodes, 1 tasks per node, 4 cpus per task)
+# (1 nodes, 8 tasks per node, 1 cpus per task)
+# ----
+# NUM_N = (1,) # of problems sizes (N)
+# N = (29232, 43848, 58464, 73080, 467712, 935424) # Ns # Appropriate for 16GB RAM
+# NUM_BLOCKS = (1,) # of NBs
+# BLOCK_SIZE = (32, 48, 64, 96, 128, 232, 512, 768) # NBs
 # PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
 # NUM_PxQ = (1,) # of process grids (P x Q)
 # P = (1, 4, 8) # Ps

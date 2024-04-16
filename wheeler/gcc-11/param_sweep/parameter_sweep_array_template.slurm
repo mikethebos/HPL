@@ -2,7 +2,7 @@
 
 #SBATCH --job-name HPL_ParamSweep
 #SBATCH --partition normal
-#SBATCH --time 00:10:00
+#SBATCH --time 00:55:00
 #SBATCH --nodes <PARAM_NNODES>
 #SBATCH --ntasks-per-node <PARAM_NTASKSPERNODE>
 #SBATCH --cpus-per-task <PARAM_CPUSPERTASK>
