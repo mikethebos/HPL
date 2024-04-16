@@ -6,7 +6,7 @@
 #SBATCH --nodes 8
 #SBATCH --ntasks-per-node 16
 #SBATCH --cpus-per-task 1
-#SBATCH --mem 128GB
+#SBATCH --mem 91GB
 #SBATCH --array=1-729
 
 # Load the required packages (gcc 11 and HPL)
