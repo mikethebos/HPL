@@ -3,13 +3,13 @@
 from itertools import product
 
 NUM_N = (1,) # of problems sizes (N)
-N = (3000, 11000, 14616) # Ns # Appropriate for 16GB RAM
-NUM_BLOCKS = (1,) # of NBs
-BLOCK_SIZE = (32, 64, 96) # NBs
+N = (4096, 8192, 16384) # Ns # Appropriate for 16GB RAM
+NUM_BLOCKS = (3,) # of NBs
+BLOCK_SIZE = (32, 128, 256) # NBs
 PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
-NUM_PxQ = (1,) # of process grids (P x Q)
+NUM_PxQ = (3,) # of process grids (P x Q)
 P = (1, 2, 4) # Ps
-Q = (1, 2, 4, 8) # Qs
+Q = (1, 2, 4) # Qs
 THRESH = (16.0,) # threshold
 NUM_PFACT = (1,) # of panel fact
 PFACT = (2,) # PFACTs (0=left, 1=Crout, 2=Right)
