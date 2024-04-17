@@ -3,7 +3,7 @@
 from itertools import product
 
 NUM_N = (1,) # of problems sizes (N)
-N = (4096, 8192, 16384) # Ns # Appropriate for 16GB RAM
+N = (4096, 8192, 13312) # Ns # Appropriate for 16GB RAM
 NUM_BLOCKS = (1,) # of NBs
 BLOCK_SIZE = (32, 128, 256) # NBs
 PROC_MAP = (0,) # PMAP process mapping (0=Row-,1=Column-major)
