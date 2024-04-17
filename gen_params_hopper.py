@@ -29,16 +29,12 @@ L1_T = (0,) # L1 in (0=transposed,1=no-transposed) form
 U_T = (0,) # U in (0=transposed,1=no-transposed) form
 EQUIL = (1,) # Equilibration (0=no,1=yes)
 MEM_ALIGN = (8,) # memory alignment in double ( 0)
-SLURM_NNODES = (1, 2, 8)
-SLURM_NTASKS_PER_NODE = (1, 8, 16)
-OMP_THREADS = (1,)
 
 all_combinations = list(product(NUM_N, N, NUM_BLOCKS, BLOCK_SIZE, PROC_MAP, NUM_PxQ, P, Q,
                         THRESH, NUM_PFACT, PFACT, NUM_REC_STOP_CRIT, NBMIN,
                         NUM_REC_PANELS, NDIV, NUM_RPFACT, RPFACT, NUM_BCAST, BCAST,
                         NUM_DEPTH, DEPTH, SWAP, SWAP_THRESH, L1_T, U_T, EQUIL,
-                        MEM_ALIGN,
-                        SLURM_NNODES, SLURM_NTASKS_PER_NODE, OMP_THREADS))
+                        MEM_ALIGN))
 
 for args in all_combinations:
     print(','.join(str(x) for x in args))

@@ -1,14 +1,5 @@
 #!/bin/bash
 
-#SBATCH --job-name HPL_ParamSweep
-#SBATCH --partition general
-#SBATCH --time 00:10:00
-#SBATCH --nodes 8
-#SBATCH --ntasks-per-node 16
-#SBATCH --cpus-per-task 1
-#SBATCH --mem 91GB
-#SBATCH --array=1-729
-
 # Load the required packages (gcc 11 and HPL)
 module load gcc/11.2.0-655h hpl
 
@@ -43,7 +34,7 @@ echo Read param line $SLURM_ARRAY_TASK_ID: $PARAMS
 read -r NUM_N N NUM_BLOCKS BLOCK_SIZE PROC_MAP NUM_PxQ P Q THRESH NUM_PFACT \
     PFACT NUM_REC_STOP_CRIT NBMIN NUM_REC_PANELS NDIV NUM_RPFACT RPFACT \
     NUM_BCAST BCAST NUM_DEPTH DEPTH SWAP SWAP_THRESH L1_T U_T EQUIL MEM_ALIGN \
-    SLURM_NNODES SLURM_NTASKS_PER_NODE OMP_THREADS <<<$(echo $PARAMS)
+    <<<$(echo $PARAMS)
 
 # Create a new working directory for each instance of xhpl since it needs it expects it's own HPL.dat
 SCRATCH_DIR=/carc/scratch/users/$USER
@@ -97,7 +88,7 @@ $MEM_ALIGN          # memory alignment in double (> 0)" > HPL.dat
 export OMP_NUM_THREADS=$OMP_THREADS
 
 echo Running xhpl in $TMP_WORKING_DIR...
-srun --nodes $SLURM_NNODES --ntasks-per-node $SLURM_NTASKS_PER_NODE --cpus-per-task $OMP_NUM_THREADS --mpi=pmi2 xhpl
+srun --mpi=pmi2 xhpl
 echo xhpl finished
 
 # The HPL.dat file tells xhpl to write to HPL.out.
@@ -118,7 +109,7 @@ if [ ! -z "${GFLOPS}" ]; then
     echo Results Gflops: $GFLOPS 
 
     echo Writing input parameters and gflops to $RESULTS_FILE
-    echo $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $SLURM_NNODES, $SLURM_NTASKS_PER_NODE, $OMP_NUM_THREADS, $GFLOPS >> $RESULTS_FILE
+    echo $NUM_N, $N, $NUM_BLOCKS, $BLOCK_SIZE, $PROC_MAP, $NUM_PxQ, $P, $Q, $THRESH, $NUM_PFACT, $PFACT, $NUM_REC_STOP_CRIT, $NBMIN, $NUM_REC_PANELS, $NDIV, $NUM_RPFACT, $RPFACT, $NUM_BCAST, $BCAST, $NUM_DEPTH, $DEPTH, $SWAP, $SWAP_THRESH, $L1_T, $U_T, $EQUIL, $MEM_ALIGN, $SLURM_NNODES, $SLURM_NTASKS_PER_NODE, $SLURM_CPUS_PER_TASK, $GFLOPS >> $RESULTS_FILE
 
     # Clean up the temporary working directory
     rm -r $TMP_DIR
